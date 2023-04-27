@@ -7,6 +7,7 @@ package com.cosc2440;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -16,16 +17,16 @@ import javax.sound.midi.Soundbank;
 
 public class ShoppingCart {
     private final static double BASE_FEE = 0.1;
-    private Set<String> shoppingCart;
+    private HashMap<Product, Integer> shoppingCart = new HashMap<>();
     private String name; //Assume cart have different and unique name
 
     /**
-    Creates a new instance of ShoppingCart with an empty HashSet of products and a unique name.
+    Creates a new instance of ShoppingCart with an empty HashMap of products unique name and quantity.
     The name is generated based on the current number of shopping carts in the system.
     @throws Exception if there is an error retrieving the cart count from the ShoppingCartList.
     */
     public ShoppingCart() {
-        this.shoppingCart = new HashSet<String>();
+        this.shoppingCart = new HashMap<Product, Integer>();
         this.name = Integer.toString(ShoppingCartList.getCartCount()+1);
     }
 
@@ -38,10 +39,24 @@ public class ShoppingCart {
         return String.format("Cart number: %s, Weight: %.1f, Total Price: %.1f, Product: %s", this.name, this.calculateWeight(),this.cartAmount(),this.shoppingCart.toString());
     }
 
+    public void addProductToCart(Product p, int quantity){
+        if (shoppingCart.containsKey(p)){
+            for (Product product: shoppingCart.keySet()){
+                if (product.getName().equals(p)){
+                    int currentQuantity = shoppingCart.get(p);
+                    shoppingCart.put(p, currentQuantity + quantity);
+                }
+            }
+        }else{
+            shoppingCart.put(p, 1);
+        }        
+    }
+
     public static void addProductToCart() throws Exception{
         Scanner scanner = new Scanner(System.in);
         String name;
         String productName;
+        int quantity;
         boolean cartFound = false;
         System.out.println("Enter Shopping cart name: ");
         name = scanner.nextLine();
@@ -49,11 +64,14 @@ public class ShoppingCart {
             if (s.getName().equals(name)){
                 System.out.println("Enter Product Name to add to shopping cart");
                 productName = scanner.nextLine();
+                System.out.println("Enter the quantity");
+                quantity = scanner.nextInt();
+                scanner.nextLine();
                 // s.addItem(productName);
-                if (s.addItem(productName)){
-                    System.out.println("Added "+productName+" to cart: "+s.getName());
+                if (s.addItem(productName,quantity)){
+                    System.out.println("Added "+quantity+" "+productName+" to cart: "+s.getName());
                 }else{
-                    System.out.println("Product not found.");
+                    System.out.println("Product not found/ not enough quantity.");
                 }
                 cartFound = true;
                 break;
@@ -68,6 +86,7 @@ public class ShoppingCart {
         Scanner scanner = new Scanner(System.in);
         String name;
         String productName;
+        int quantity;
         boolean cartFound = false;
         System.out.println("Enter Shopping cart name: ");
         name = scanner.nextLine();
@@ -75,10 +94,17 @@ public class ShoppingCart {
             if (s.getName().equals(name)){
                 System.out.println("Enter Product Name to remove from shopping cart");
                 productName = scanner.nextLine();
-                s.removeItem(productName);
-                System.out.println("Removed "+productName+" from cart: "+s.getName());
+                System.out.println("Enter the quantity");
+                quantity = scanner.nextInt();
+                scanner.nextLine();
+                if (s.removeItem(productName,quantity)){
+                    System.out.println("Removed "+quantity+" "+productName+" from cart: "+s.getName());
+                }else{
+                    System.out.println("Product not found/ not enough quantity.");
+                }
                 cartFound = true;
                 break;
+                
             }
         }
         if (cartFound == false){
@@ -86,38 +112,54 @@ public class ShoppingCart {
         }
     }
     
-    /**
-    Adds a product with the given name to the shopping cart.
-    @param productName the name of the product to add to the cart
-    @return true if the product was added successfully, false otherwise
-    @throws Exception if attempting to add a product already contained in the cart
-    */
-    public boolean addItem(String productName) throws Exception{
-        for (Product product: Product.getProductList()){
-            if (product.getName().equals(productName) && product.getQuantityAvailable()>0 && !shoppingCart.contains(productName)){
-                shoppingCart.add(productName);
-                product.setQuantityAvailable(product.getQuantityAvailable()-1);;    
+    public boolean addItem(String productName, int quantity) throws Exception{
+        for (Product p: shoppingCart.keySet()){
+            if (p.getName().equalsIgnoreCase(productName)){
+                int currentQuantity = shoppingCart.get(p);
+                shoppingCart.put(p, currentQuantity + quantity);
+                p.setQuantityAvailable(p.getQuantityAvailable()-quantity);
                 return true;
+            }
+        }
+        for (Product product: Product.getProductList()){
+            if (product.getName().equals(productName) && product.getQuantityAvailable()>0 && (product.getQuantityAvailable()-quantity>0) && quantity > 0){
+                shoppingCart.put(product, quantity);
+                product.setQuantityAvailable(product.getQuantityAvailable()-quantity);
+                return true;
+            }
+        }
+        return false;
+    }       
+
+    public boolean removeItem(String productName, int quantity) throws Exception{
+        for (Product p: shoppingCart.keySet()){
+            if (!p.getName().equalsIgnoreCase(productName)){
+                return false;
+            }            
+        }
+        for (Product product: shoppingCart.keySet()){
+            if (product.getName().equals(productName)){
+                int currentQuantity = shoppingCart.get(product);
+                if (currentQuantity - quantity <= 0){
+                    shoppingCart.remove(product);
+                    addQuantityForItemRemoval(productName, quantity);
+                    return true;
+                }else{
+                    shoppingCart.put(product, currentQuantity - quantity);
+                    addQuantityForItemRemoval(productName, quantity);
+                    return true;
+                }        
             }
         }
         return false;
     }
 
-    /**
-    Remove a product with the given name from the shopping cart.
-    @param productName the name of the product to remove from the cart
-    @return true if the product was remove successfully, false otherwise
-    @throws Exception if attempting to remove a product not exist in the cart
-    */
-    public boolean removeItem(String productName) throws Exception{
-        if (shoppingCart.contains(productName)){
-            shoppingCart.remove(productName);
-            for (Product product: Product.getProductList()){
-                if (product.getName().equals(productName)){
-                    product.setQuantityAvailable(product.getQuantityAvailable()+1);
-                }
+    public boolean addQuantityForItemRemoval(String productName, int quantity) throws Exception{
+        for (Product p: Product.getProductList()){
+            if (p.getName().equals(productName)){
+                p.setQuantityAvailable(p.getQuantityAvailable() + quantity);
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -128,22 +170,22 @@ public class ShoppingCart {
     */
     public double cartAmount(){
         double total = 0;
-        for (String s: shoppingCart){
+        for (Product s: shoppingCart.keySet()){
             for (Product p: Product.getProductList()){
-                if(s.equals(p.getName()) && p instanceof DigitalProduct){
-                    total += p.getPrice();
+                if(s.equals(p) && p instanceof DigitalProduct){
+                    total += p.getPrice()*shoppingCart.get(s);
                 }
 
-                else if(s.equals(p.getName()) && p instanceof GiftableDigitalProduct){
-                    total += p.getPrice();
+                else if(s.equals(p) && p instanceof GiftableDigitalProduct){
+                    total += p.getPrice()*shoppingCart.get(s);
                 }
 
-                else if(s.equals(p.getName()) && p instanceof PhysicalProduct){
-                    total += p.getPrice() +((PhysicalProduct) p).getWeight() * BASE_FEE;
+                else if(s.equals(p) && p instanceof PhysicalProduct){
+                    total += p.getPrice()*shoppingCart.get(s) +((PhysicalProduct) p).getWeight() *shoppingCart.get(s) * BASE_FEE;
                 }
 
-                else if(s.equals(p.getName()) && p instanceof GiftablePhysicalProduct){
-                    total += p.getPrice() +((GiftablePhysicalProduct) p).getWeight() * BASE_FEE;
+                else if(s.equals(p) && p instanceof GiftablePhysicalProduct){
+                    total += p.getPrice()*shoppingCart.get(s) +((GiftablePhysicalProduct) p).getWeight()*shoppingCart.get(s) * BASE_FEE;
                 }
             }
         }
@@ -156,12 +198,12 @@ public class ShoppingCart {
     */
     public double calculateWeight(){
         double totalWeight =0;
-        for (String s: shoppingCart){
+        for (Product s: shoppingCart.keySet()){
             for (Product p: Product.getProductList()){
-                if(s.equals(p.getName()) && p instanceof PhysicalProduct){
-                    totalWeight += ((PhysicalProduct) p).getWeight();
-                }else if (s.equals(p.getName()) && p instanceof GiftablePhysicalProduct){
-                    totalWeight += ((GiftablePhysicalProduct) p).getWeight();
+                if(s.equals(p) && p instanceof PhysicalProduct){
+                    totalWeight += ((PhysicalProduct) p).getWeight()*shoppingCart.get(s);
+                }else if (s.equals(p) && p instanceof GiftablePhysicalProduct){
+                    totalWeight += ((GiftablePhysicalProduct) p).getWeight()*shoppingCart.get(s);
                 }
             }
         }
@@ -172,7 +214,7 @@ public class ShoppingCart {
 
     // Getters and Setters
 
-    public Set<String> getShoppingCart(){
+    public HashMap getShoppingCart(){
         return shoppingCart;
     }
 
@@ -180,7 +222,7 @@ public class ShoppingCart {
         return BASE_FEE;
     }
 
-    public void setShoppingCart(Set<String> shoppingCart) {
+    public void setShoppingCart(HashMap<Product, Integer> shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
 
