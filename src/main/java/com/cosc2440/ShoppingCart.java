@@ -142,7 +142,7 @@ public class ShoppingCart {
                 int currentQuantity = shoppingCart.get(product);
                 if (currentQuantity - quantity <= 0){
                     shoppingCart.remove(product);
-                    addQuantityForItemRemoval(productName, quantity);
+                    addQuantityForItemRemoval(productName, currentQuantity);
                     return true;
                 }else{
                     shoppingCart.put(product, currentQuantity - quantity);
