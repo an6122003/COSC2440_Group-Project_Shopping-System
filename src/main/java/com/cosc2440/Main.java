@@ -20,18 +20,38 @@ public class Main {
         System.out.println("--------------------------------\n");
 
         // Sample products creation
-        Product.getProductList().add(new DigitalProduct("Ebook", "A digital book", 10, 9.99)); 
-        Product.getProductList().add(new PhysicalProduct("T-shirt", "A cotton T-shirt", 20, 19.99, 0.2));
-        Product.getProductList().add(new DigitalProduct("Audiobook", "A digital audiobook", 15, 14.99));
-        Product.getProductList().add(new PhysicalProduct("Mug", "A ceramic mug", 30, 12.99, 0.5));
-        Product.getProductList().add(new DigitalProduct("Movie", "A digital movie", 5, 4.99));
-        Product.getProductList().add(new PhysicalProduct("Book", "A physical book", 25, 24.99, 0.8));
-        Product.getProductList().add(new DigitalProduct("Music Album", "A digital music album", 10, 9.99));
-        Product.getProductList().add(new PhysicalProduct("Vinyl Record", "A vinyl record", 15, 14.99, 0.3));
-        Product.getProductList().add(new GiftablePhysicalProduct("Shirt","A cotton shirt with a cool graphic print", 25, 300, 1.5, "Congratulations!"));
-        Product.getProductList().add(new GiftableDigitalProduct("Album", "A collection of popular songs in MP3 format", 20, 100, "Enjoy the music!"));
-        Product.getProductList().add(new GiftablePhysicalProduct("Journal","A hardcover journal with a pen holder", 15, 200, 1, "Write your heart out!"));
-        Product.getProductList().add(new GiftableDigitalProduct("Online Course", "A comprehensive course on web development", 100, 500, "Happy learning!"));  
+        ProductList.getProductList().add(new DigitalProduct("Ebook", "A digital book", 10, 9.99)); 
+        ProductList.getProductList().add(new PhysicalProduct("T-shirt", "A cotton T-shirt", 20, 19.99, 0.2));
+        ProductList.getProductList().add(new DigitalProduct("Audiobook", "A digital audiobook", 15, 14.99));
+        ProductList.getProductList().add(new PhysicalProduct("Mug", "A ceramic mug", 30, 12.99, 0.5));
+        ProductList.getProductList().add(new DigitalProduct("Movie", "A digital movie", 5, 4.99));
+        ProductList.getProductList().add(new PhysicalProduct("Book", "A physical book", 25, 24.99, 0.8));
+        ProductList.getProductList().add(new DigitalProduct("Music Album", "A digital music album", 10, 9.99));
+        ProductList.getProductList().add(new PhysicalProduct("Vinyl Record", "A vinyl record", 15, 14.99, 0.3));
+        ProductList.getProductList().add(new GiftablePhysicalProduct("Shirt","A cotton shirt with a cool graphic print", 25, 300, 1.5, "Congratulations!"));
+        ProductList.getProductList().add(new GiftableDigitalProduct("Album", "A collection of popular songs in MP3 format", 20, 100, "Enjoy the music!"));
+        ProductList.getProductList().add(new GiftablePhysicalProduct("Journal","A hardcover journal with a pen holder", 15, 200, 1, "Write your heart out!"));
+        ProductList.getProductList().add(new GiftableDigitalProduct("Online Course", "A comprehensive course on web development", 100, 500, "Happy learning!"));
+        
+        //Sample cart and coupon creation
+        ShoppingCartList.createShoppingCart();
+        ShoppingCartList.createShoppingCart();
+        ShoppingCartList.createShoppingCart();
+
+        
+
+        // for (ShoppingCart s: ShoppingCartList.getShoppingCartList()){
+        //     if (s.getName().equals("1")){
+        //         s.addCoupon(new PriceCoupon(100));
+        //     }else if (s.getName().equals("2")){
+        //         s.addCoupon(new PercentageCoupon(50));
+        //         s.getCouponApplied().addAppliedProductList("Mug");
+        //     }
+        //     else{
+        //         s.addCoupon(new PercentageCoupon(100));
+        //     }
+        // }
+        
 
         // Main program
         while (!quit){
@@ -45,7 +65,9 @@ public class Main {
             System.out.println("5. Remove product from shoping cart");
             System.out.println("6. View all shoping cart");
             System.out.println("7. View all shoping cart sorted by weight");
-            System.out.println("8. Quit");
+            System.out.println("8. Apply coupon to shopping cart");
+            System.out.println("9. Remove coupon from shopping cart");
+            System.out.println("10. Quit");
             System.out.println("--------------------------------");
             System.out.println("(Enter the according number to proceed)");
             
@@ -95,6 +117,10 @@ public class Main {
                     System.out.println("--------------------------------");
                     break;
                 case "8":
+                    System.out.println("--------------------------------");
+                    ShoppingCart.addCouponToCart();
+                    break;
+                case "10":
                     System.out.println("--------------------------------");
                     System.out.println("Goodbye, See you again.");
                     quit = true;
