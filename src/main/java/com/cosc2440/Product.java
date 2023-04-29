@@ -1,6 +1,7 @@
 package com.cosc2440;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -14,7 +15,6 @@ public abstract class Product{
     private String Description;
     private int quantityAvailable;
     private double price;
-    private static ArrayList<Product> productList = new ArrayList<>();
     private String giftMessage;
 
     /**
@@ -28,6 +28,7 @@ public abstract class Product{
     public Product(String Name, String Description, int quantityAvailable, double price) throws Exception {
         if (Product.nameCheck(Name)){
             this.Name = Name;
+            ProductList.getProductMap().put(Name, this);
         }else{
             throw new Exception("Product name must be unique");
         }
@@ -46,7 +47,7 @@ public abstract class Product{
     @return true if the product name is unique, false if not
     */
     public static boolean nameCheck(String name){
-        for (Product product: productList){
+        for (Product product: ProductList.getProductList()){
             if (name.equals(product.getName())){
                 return false;
             }
@@ -80,7 +81,7 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Product Price:");
             price = scanner.nextDouble();
-            productList.add(new DigitalProduct(name, description, quantity, price));
+            ProductList.getProductList().add(new DigitalProduct(name, description, quantity, price));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -97,7 +98,7 @@ public abstract class Product{
             System.out.println("Product Weight:");
             weight = scanner.nextDouble();
             scanner.nextLine();
-            productList.add(new PhysicalProduct(name, description, quantity, price, weight));
+            ProductList.getProductList().add(new PhysicalProduct(name, description, quantity, price, weight));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -115,7 +116,7 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Product Gift Message:");
             giftMessage = scanner.nextLine();
-            productList.add(new GiftableDigitalProduct(name, description, quantity, price,giftMessage));
+            ProductList.getProductList().add(new GiftableDigitalProduct(name, description, quantity, price,giftMessage));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -136,7 +137,7 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Product Gift Message:");
             giftMessage = scanner.nextLine();
-            productList.add(new GiftablePhysicalProduct(name, description, quantity, price, weight, giftMessage));
+            ProductList.getProductList().add(new GiftablePhysicalProduct(name, description, quantity, price, weight, giftMessage));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
         }
@@ -172,7 +173,7 @@ public abstract class Product{
             price = scanner.nextDouble();
             scanner.nextLine();
             
-            for (Product p: Product.getProductList()){
+            for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
@@ -200,7 +201,7 @@ public abstract class Product{
             System.out.println("Enter New Product Weight:");
             weight = scanner.nextDouble();
             
-            for (Product p: Product.getProductList()){
+            for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
@@ -229,7 +230,7 @@ public abstract class Product{
             System.out.println("Enter New Product Gift Message:");
             giftMessage = scanner.nextLine();
             
-            for (Product p: Product.getProductList()){
+            for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
@@ -261,7 +262,7 @@ public abstract class Product{
             System.out.println("Enter New Product Gift Message:");
             giftMessage = scanner.nextLine();
             
-            for (Product p: Product.getProductList()){
+            for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
@@ -283,7 +284,7 @@ public abstract class Product{
     */
     public static void displayProductList(){
         int count = 0;
-        for (Product p: Product.getProductList()){
+        for (Product p: ProductList.getProductList()){
             count++;
             System.out.print(count+". ");
             if (p instanceof GiftableDigitalProduct){
@@ -339,10 +340,5 @@ public abstract class Product{
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public static ArrayList<Product> getProductList(){
-        return productList;
-    }    
-
+    } 
 }

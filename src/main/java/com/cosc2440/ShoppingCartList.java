@@ -6,11 +6,13 @@ package com.cosc2440;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class ShoppingCartList {
     private static int cartCount = 0;
     private static ArrayList<ShoppingCart> shoppingCartList = new ArrayList();
+    private static HashMap<String,ShoppingCart> shoppingCartMap = new HashMap<>();
 
     /**
     Creates a new shopping cart and adds it to the shoppingCartList.
@@ -79,6 +81,10 @@ public class ShoppingCartList {
     }
 
     //Getters and Setters 
+    public static ShoppingCart getShoppingCartObjectByName(String shoppingCartName){
+        return shoppingCartMap.get(shoppingCartName);
+    }
+
     public static int getCartCount(){
         return cartCount;
     }
@@ -87,4 +93,7 @@ public class ShoppingCartList {
         return shoppingCartList;
     }    
 
+    public static HashMap<String,ShoppingCart> getShoppingCartMap(){
+        return shoppingCartMap;
+    }    
 }
