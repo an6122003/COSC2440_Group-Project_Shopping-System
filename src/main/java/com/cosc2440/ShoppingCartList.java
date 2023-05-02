@@ -34,7 +34,6 @@ public class ShoppingCartList {
         }
         for (ShoppingCart s: ShoppingCartList.getShoppingCartList()){
             System.out.println(s.toString());
-            System.out.println();
         }
     }
 

@@ -15,7 +15,7 @@ public abstract class Product{
     private String Description;
     private int quantityAvailable;
     private double price;
-    private String giftMessage;
+    private String taxType;
 
     /**
     Constructs a new Product object with the specified name, description, quantity available, and price.
@@ -25,7 +25,7 @@ public abstract class Product{
     @param price the price of the product
     @throws Exception if the product name is not unique or the quantity is less than or equal to zero
     */
-    public Product(String Name, String Description, int quantityAvailable, double price) throws Exception {
+    public Product(String Name, String Description, int quantityAvailable, double price, String taxType) throws Exception {
         if (Product.nameCheck(Name)){
             this.Name = Name;
             ProductList.getProductMap().put(Name, this);
@@ -39,6 +39,7 @@ public abstract class Product{
             throw new Exception("Quantity must be positive");
         }
         this.price = price;
+        this.taxType = taxType;
     }
 
     /**
@@ -62,7 +63,7 @@ public abstract class Product{
         int quantity;
         double price;
         double weight;
-        String giftMessage;
+        String taxType;
 
         System.out.println("Which kind of product do you want to create ?");
         System.out.println("1. Digital Product");
@@ -81,7 +82,10 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Product Price:");
             price = scanner.nextDouble();
-            ProductList.getProductList().add(new DigitalProduct(name, description, quantity, price));
+            scanner.nextLine();
+            System.out.println("Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
+            ProductList.getProductList().add(new DigitalProduct(name, description, quantity, price,taxType));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -98,7 +102,9 @@ public abstract class Product{
             System.out.println("Product Weight:");
             weight = scanner.nextDouble();
             scanner.nextLine();
-            ProductList.getProductList().add(new PhysicalProduct(name, description, quantity, price, weight));
+            System.out.println("Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
+            ProductList.getProductList().add(new PhysicalProduct(name, description, quantity, price, weight,taxType));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -114,9 +120,9 @@ public abstract class Product{
             System.out.println("Product Price:");
             price = scanner.nextDouble();
             scanner.nextLine();
-            System.out.println("Product Gift Message:");
-            giftMessage = scanner.nextLine();
-            ProductList.getProductList().add(new GiftableDigitalProduct(name, description, quantity, price,giftMessage));
+            System.out.println("Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
+            ProductList.getProductList().add(new GiftableDigitalProduct(name, description, quantity, price, taxType));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
 
@@ -135,9 +141,9 @@ public abstract class Product{
             System.out.println("Product Weight:");
             weight = scanner.nextDouble();
             scanner.nextLine();
-            System.out.println("Product Gift Message:");
-            giftMessage = scanner.nextLine();
-            ProductList.getProductList().add(new GiftablePhysicalProduct(name, description, quantity, price, weight, giftMessage));
+            System.out.println("Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
+            ProductList.getProductList().add(new GiftablePhysicalProduct(name, description, quantity, price, weight, taxType));
             System.out.println("Product created successfully!\n--------------------------------");
             break;
         }
@@ -151,6 +157,7 @@ public abstract class Product{
         double price;
         double weight;
         String giftMessage;
+        String taxType;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -172,12 +179,15 @@ public abstract class Product{
             System.out.println("Enter New Product Price:");
             price = scanner.nextDouble();
             scanner.nextLine();
+            System.out.println("Enter New Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
             
             for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
                     p.setPrice(price);
+                    p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
                 }else{
@@ -200,6 +210,8 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Enter New Product Weight:");
             weight = scanner.nextDouble();
+            System.out.println("Enter New Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
             
             for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
@@ -207,6 +219,7 @@ public abstract class Product{
                     p.setQuantityAvailable(quantity);
                     p.setPrice(price);
                     ((PhysicalProduct)p).setWeight(weight);
+                    p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
                 }else{
@@ -227,15 +240,15 @@ public abstract class Product{
             System.out.println("Enter New Product Price:");
             price = scanner.nextDouble();
             scanner.nextLine();
-            System.out.println("Enter New Product Gift Message:");
-            giftMessage = scanner.nextLine();
+            System.out.println("Enter New Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
             
             for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
                     p.setDescription(description);
                     p.setQuantityAvailable(quantity);
                     p.setPrice(price);
-                    ((GiftableDigitalProduct) p).setMessage(giftMessage);
+                    p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
                 }else{
@@ -259,8 +272,8 @@ public abstract class Product{
             System.out.println("Enter New Product Weight:");
             weight = scanner.nextDouble();
             scanner.nextLine();
-            System.out.println("Enter New Product Gift Message:");
-            giftMessage = scanner.nextLine();
+            System.out.println("Enter New Product Tax Type (No/Normal/Luxury):");
+            taxType = scanner.nextLine();
             
             for (Product p: ProductList.getProductList()){
                 if (name.equalsIgnoreCase(p.getName())){
@@ -268,7 +281,7 @@ public abstract class Product{
                     p.setQuantityAvailable(quantity);
                     p.setPrice(price);
                     ((PhysicalProduct)p).setWeight(weight);
-                    ((GiftablePhysicalProduct)p).setMessage(giftMessage);
+                    p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
                 }else{
@@ -288,14 +301,14 @@ public abstract class Product{
             count++;
             System.out.print(count+". ");
             if (p instanceof GiftableDigitalProduct){
-                System.out.printf("Type: Giftable Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Gift Message: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((GiftableDigitalProduct) p).getMessage());
+                System.out.printf("Type: Giftable Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((GiftableDigitalProduct) p).getTaxType());
             }else if (p instanceof GiftablePhysicalProduct){
-                System.out.printf("Type: Gifttable Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Gift Message: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),((GiftablePhysicalProduct) p).getMessage());
+                System.out.printf("Type: Gifttable Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),((GiftablePhysicalProduct) p).getTaxType());
             }
             else if (p instanceof DigitalProduct){
-                System.out.printf("Type: Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice());
+                System.out.printf("Type: Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),p.getTaxType());
             }else if (p instanceof PhysicalProduct){
-                System.out.printf("Type: Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight());
+                System.out.printf("Type: Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),p.getTaxType());
             }
         }
     }
@@ -341,4 +354,14 @@ public abstract class Product{
     public void setPrice(double price) {
         this.price = price;
     } 
+
+    public String getTaxType() {
+        return this.taxType;
+    }
+
+    public void setTaxType(String taxType) {
+        this.taxType = taxType;
+    }
+
+
 }

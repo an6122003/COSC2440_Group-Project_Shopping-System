@@ -1,0 +1,27 @@
+|--------------------------------------------------------------|
+|                       RECEIPT                                  |
+|                                                              |
+| Customer Name: An Nguyen                                      |
+| Date: 04/30/2023                                               |
+|                                                              |
+|                                                               |
+| Cart Number: 2                                               |
+| Product:            {}                          |
+| Gift Message:       {}                          |
+| Total Weight:       0.0 kg                                    |
+| --------------------------------                              |
+| Coupon Applied:                                               |
+| null                                                            |
+| --------------------------------                              |
+| Subtotal:           $0.0                                     |
+| Tax:                $0.0                                     |
+| Total:              $0.0                                     |
+|                                                              |
+| Payment Method: Credit Card                                    |
+| Card Number: **** **** **** 1234                               |
+| Authorization Code: 123456                                     |
+|                                                              |
+|                                                              |
+| Thank you for shopping with us!                                |
+|                                                              |
+|--------------------------------------------------------------|

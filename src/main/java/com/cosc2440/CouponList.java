@@ -7,7 +7,12 @@ public class CouponList {
     private static ArrayList<Coupon> couponList = new ArrayList();
     private static HashMap<String,Coupon> couponMap = new HashMap<>();
 
-    
+    public static void viewAllCoupon(){
+        for (Coupon c: couponList){
+            System.out.println(c);
+            System.out.println("--------------------------------");
+        }
+    }
 
     //Getters and Setters
     public static Coupon getCouponObjectByName(String couponName){
@@ -18,7 +23,9 @@ public class CouponList {
         return couponMap;
     }
 
-    public static ArrayList<Coupon> getProductList(){
+    public static ArrayList<Coupon> getCouponList(){
         return couponList;
     }
+
+    
 }

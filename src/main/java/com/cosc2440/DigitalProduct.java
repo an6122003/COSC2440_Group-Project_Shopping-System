@@ -14,8 +14,8 @@ public class DigitalProduct extends Product{
     @param price the price of the digital product
     @throws Exception if the price is negative or the quantity is less than zero
     */
-    public DigitalProduct(String Name, String Description, int quantityAvailable, double price) throws Exception {
-        super(Name, Description, quantityAvailable, price);
+    public DigitalProduct(String Name, String Description, int quantityAvailable, double price, String taxType) throws Exception {
+        super(Name, Description, quantityAvailable, price,taxType);
     }
     /**
     Returns a string representation of the DigitalProduct object.

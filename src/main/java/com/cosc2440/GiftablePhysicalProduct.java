@@ -4,8 +4,7 @@ package com.cosc2440;
  * @author Nguyen Quoc An - s3938278
  */
 
-public class GiftablePhysicalProduct extends PhysicalProduct implements Gifts{
-    private String giftMessage;
+public class GiftablePhysicalProduct extends PhysicalProduct{
 
     /**
     Constructs a new GiftablePhysicalProduct object with the specified name, description, quantity available, price, weight, and gift message.
@@ -17,25 +16,14 @@ public class GiftablePhysicalProduct extends PhysicalProduct implements Gifts{
     @param giftMessage the gift message to be included with the product
     @throws Exception if the price is negative, the quantity is less than zero, or the weight is negative or zero
     */
-    public GiftablePhysicalProduct(String Name, String Description, int quantityAvailable, double price, double weight, String giftMessage)
+    public GiftablePhysicalProduct(String Name, String Description, int quantityAvailable, double price, double weight, String taxType)
             throws Exception {
-        super(Name, Description, quantityAvailable, price, weight);
-        this.giftMessage = giftMessage;
+        super(Name, Description, quantityAvailable, price, weight,taxType);
     }
 
     // Getters and Setters
     @Override
     public String toString(){
         return String.format("GIFTABLE PHYSICAL - %s", this.getName());
-    }
-
-    @Override
-    public void setMessage(String msg) {
-        this.giftMessage = msg;
-    }
-
-    @Override
-    public String getMessage() {
-        return this.giftMessage;
     }
 }

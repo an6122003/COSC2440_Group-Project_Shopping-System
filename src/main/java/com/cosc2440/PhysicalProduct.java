@@ -16,8 +16,8 @@ public class PhysicalProduct extends Product{
     @param weight the weight of the physical product
     @throws Exception if the price is negative, the quantity is less than zero, or the weight is negative or zero
     */
-    public PhysicalProduct(String Name, String Description, int quantityAvailable, double price, double weight) throws Exception {
-        super(Name, Description, quantityAvailable, price);
+    public PhysicalProduct(String Name, String Description, int quantityAvailable, double price, double weight, String taxType) throws Exception {
+        super(Name, Description, quantityAvailable, price,taxType);
         this.weight = weight;
     }
 

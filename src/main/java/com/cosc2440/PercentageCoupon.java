@@ -10,7 +10,7 @@ public class PercentageCoupon extends Coupon{
 
     @Override
     public String toString(){
-        return String.format("Coupon ID: %s, Coupon Type: Percentage Coupon , Coupon Value: %.0f%%",this.getId(),this.getCouponValue());
+        return String.format("Coupon ID: %s\nCoupon Type: Percentage Coupon\nCoupon Value: %.0f%%",this.getId(),this.getCouponValue());
     }
 
     //Getters and Setters

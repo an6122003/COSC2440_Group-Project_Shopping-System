@@ -1,0 +1,30 @@
+|--------------------------------------------------------------|
+|                       RECEIPT                                  |
+|                                                              |
+| Customer Name: An Nguyen                                      |
+| Date Of Purchase: 02/05/2023                                  |
+|                                                              |
+|                                                               |
+| Cart Number: 1                                                |
+| Product:            {}                          |
+| Gift Message:       {}                          |
+| Total Weight:       0.0 kg                                    |
+| --------------------------------                              |
+| Coupon Applied:                                               |
+| Coupon ID: Coupon10
+Coupon Type: Percentage Coupon
+Coupon Value: 15%                                                            |
+| --------------------------------                              |
+| Shipping Fee:       $0.0                                     |
+| Subtotal:           $0.0                                     |
+| Tax:                $0.0                                     |
+| Total:              $0.0                                     |
+|                                                              |
+| Payment Method: Credit Card                                    |
+| Card Number: **** **** **** 1234                               |
+| Authorization Code: 123456                                     |
+|                                                              |
+|                                                              |
+| Thank you for shopping with us!                                |
+|                                                              |
+|--------------------------------------------------------------|

@@ -7,10 +7,14 @@ import java.util.UUID;
 public abstract class Coupon {
     private List<Product> appliedProductList;
     private String id;
+    private static int count;
     
     public Coupon(){
+        count += 1;
         appliedProductList = new ArrayList<>();
-        this.id = UUID.randomUUID().toString();
+        String tmp = "Coupon"+count;
+        this.id = tmp;
+        CouponList.getCouponMap().put(tmp,this);
     }
 
     public void addAppliedProductList(Product product){

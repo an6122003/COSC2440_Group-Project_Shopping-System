@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -19,9 +20,10 @@ import javax.security.sasl.SaslException;
 public class ShoppingCart {
     private final static double BASE_FEE = 0.1;
     private HashMap<Product, Integer> shoppingCart = new HashMap<>();
-    private static HashMap<Product, ArrayList<String>> giftMessageList = new HashMap<>();
+    private HashMap<Product, ArrayList<String>> giftMessageList = new HashMap<>();
     private String name; //Assume cart have different and unique name
     private Coupon couponApplied;
+    private boolean paid;
 
     /**
     Creates a new instance of ShoppingCart with an empty   HashMap of products unique name and quantity.
@@ -31,6 +33,7 @@ public class ShoppingCart {
     public ShoppingCart() {
         this.shoppingCart = new HashMap<Product, Integer>();
         this.name = Integer.toString(ShoppingCartList.getCartCount()+1);
+        this.paid = false;
         ShoppingCartList.getShoppingCartMap().put(Integer.toString(ShoppingCartList.getCartCount()+1),this);
     }
 
@@ -38,10 +41,20 @@ public class ShoppingCart {
     Returns a string representation of the ShoppingCart object, including the cart number, weight, total price, and the products contained in the cart.
     @return a string representation of the ShoppingCart object
     */
+    // @Override
+    // public String toString(){
+    //     return String.format("Cart number: %s\n Weight: %.1f\n Total Price Without Tax: $%.1f\n Product: %s\n Gift Message: %s\n Coupon Applied: %s\n Tax Paid: $%.1f\n--------------------------------", this.name, this.calculateWeight(),this.cartAmount(),this.shoppingCart.toString(),this.giftMessageList.toString(), couponApplied, getTotalTax());
+    // }
+
     @Override
     public String toString(){
-        return String.format("Cart number: %s, Weight: %.1f, Total Price: %.1f, Product: %s, Gift Message: %s, Coupon Applied: %s", this.name, this.calculateWeight(),this.cartAmount(),this.shoppingCart.toString(), this.giftMessageList, couponApplied);
+        if (couponApplied==null){
+            return String.format("Cart number: %s\n Weight: %.1f\n Total Price Without Tax: $%.1f\n Product: %s\n Gift Message: %s\n Coupon Applied: No Coupon\n Tax Paid: $%.1f\n Status: %s\n--------------------------------", this.name, this.calculateWeight(),this.cartAmount(),this.shoppingCart.toString(),this.giftMessageList.toString(), getTotalTax(), this.getStatus());
+        }
+        return String.format("Cart number: %s\n Weight: %.1f\n Total Price Without Tax: $%.1f\n Product: %s\n Gift Message: %s\n Coupon Applied: %s\n Tax Paid: $%.1f\n Status: %s\n--------------------------------", this.name, this.calculateWeight(),this.cartAmount(),this.shoppingCart.toString(),this.giftMessageList.toString(), couponApplied, getTotalTax(), this.getStatus());
     }
+
+
 
     public void addProductToCart(Product p, int quantity){
         if (shoppingCart.containsKey(p)){
@@ -119,6 +132,10 @@ public class ShoppingCart {
         System.out.println("Enter Shopping cart name: ");
         shoppingCartName = scanner.nextLine();
         ShoppingCart s = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
+        if (s.isPaid()){
+            System.out.println("Shopping Cart has been paid and can not be modified");
+            return;
+        }
 
         System.out.println("Enter Product Name to add to shopping cart");
         productName = scanner.nextLine();
@@ -165,6 +182,10 @@ public class ShoppingCart {
         System.out.println("Enter Shopping cart name: ");
         shoppingCartName = scanner.nextLine();
         ShoppingCart shoppingCart = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
+        if (shoppingCart.isPaid()){
+            System.out.println("Shopping Cart has been paid and can not be modified");
+            return;
+        }
 
         System.out.println("Enter Product Name to remove from shopping cart");
         productName = scanner.nextLine();
@@ -178,13 +199,13 @@ public class ShoppingCart {
                 System.out.println("Enter the message you want to remove (by number)");
                 int messRemove = scanner.nextInt();
                 scanner.nextLine();
-                while (messRemove>(giftMessageList.get(product).size()) && !(giftMessageList.get(product).size() == 0)){
+                while (messRemove>(shoppingCart.giftMessageList.get(product).size()) && !(shoppingCart.giftMessageList.get(product).size() == 0)){
                     System.out.println("Number is out of range. Please enter the message you want to remove (by number)");
                     messRemove = scanner.nextInt();
                     scanner.nextLine();
                 }
                 shoppingCart.removeItem(productName, 1);
-                String tmpMessRemove = giftMessageList.get(product).get(messRemove-1);
+                String tmpMessRemove = shoppingCart.giftMessageList.get(product).get(messRemove-1);
                 shoppingCart.removeGiftMessageForExistingProduct(productName, messRemove-1);
                 System.out.println("Removed "+"1"+" "+productName + " with the gift message " + tmpMessRemove + " from cart: "+shoppingCart.getName());
                 ShoppingCartList.viewAllShoppingCart();
@@ -305,16 +326,16 @@ public class ShoppingCart {
     }
 
     public void addGiftMessageForNewProduct(Product product, String giftMessage) throws Exception{
-        giftMessageList.put(product,new ArrayList<String>());
-        giftMessageList.get(product).add(giftMessage);
+        this.giftMessageList.put(product,new ArrayList<String>());
+        this.giftMessageList.get(product).add(giftMessage);
     }      
 
     public void addGiftMessageForExistingProduct(Product product, String giftMessage) throws Exception{
-        giftMessageList.get(product).add(giftMessage);
+        this.giftMessageList.get(product).add(giftMessage);
     }  
 
     public void removeGiftMessageForExistingProduct(Product product, int index){
-        giftMessageList.get(product).remove(index);
+        this.giftMessageList.get(product).remove(index);
     }
 
     public boolean removeGiftMessageForExistingProduct(String productName, int index){
@@ -332,6 +353,18 @@ public class ShoppingCart {
             return ((p.getPrice()*(100-((PercentageCoupon) couponApplied).getCouponValue()))/100);
         }
         return p.getPrice();
+    }
+
+    public double calculateShippingFee(){
+        double total = 0;
+        double totalWeight = 0;
+        for (Product p: shoppingCart.keySet()){
+            if (p instanceof PhysicalProduct | p instanceof GiftablePhysicalProduct){
+                totalWeight = ((PhysicalProduct) p).getWeight() * shoppingCart.get(p);
+                total += totalWeight * BASE_FEE;
+            }
+        }
+        return total;
     }
 
     /**
@@ -400,6 +433,76 @@ public class ShoppingCart {
         return total;
     }
 
+    public double cartAmountWithTax(){
+        double total = 0;
+        if (this.couponApplied instanceof PriceCoupon){
+            for (Product s: shoppingCart.keySet()){
+                if(s instanceof DigitalProduct){
+                    total += s.getPrice()*shoppingCart.get(s); //Price after coupon * quantity
+                }
+    
+                else if(s instanceof GiftableDigitalProduct){
+                    total += s.getPrice()*shoppingCart.get(s);
+                }
+    
+                else if(s instanceof PhysicalProduct){
+                    total += s.getPrice()*shoppingCart.get(s) +((PhysicalProduct) s).getWeight() *shoppingCart.get(s) * BASE_FEE;
+                }
+    
+                else if(s instanceof GiftablePhysicalProduct){
+                    total += s.getPrice()*shoppingCart.get(s) +((GiftablePhysicalProduct) s).getWeight()*shoppingCart.get(s) * BASE_FEE;
+                }
+            }       
+            return (total - ((PriceCoupon) couponApplied).getCouponValue()) + this.getTotalTax();
+
+        }else if(this.couponApplied instanceof PercentageCoupon){
+            for (Product s: shoppingCart.keySet()){
+                if(s instanceof DigitalProduct){
+                    total += this.getPriceAterCoupon(s)*shoppingCart.get(s); //Price after coupon * quantity
+                }
+    
+                else if(s instanceof GiftableDigitalProduct){
+                    total += this.getPriceAterCoupon(s)*shoppingCart.get(s);
+                }
+    
+                else if(s instanceof PhysicalProduct){
+                    total += this.getPriceAterCoupon(s)*shoppingCart.get(s) +((PhysicalProduct) s).getWeight() *shoppingCart.get(s) * BASE_FEE;
+                }
+    
+                else if(s instanceof GiftablePhysicalProduct){
+                    total += this.getPriceAterCoupon(s)*shoppingCart.get(s) +((GiftablePhysicalProduct) s).getWeight()*shoppingCart.get(s) * BASE_FEE;
+                }
+            }       
+            return total + this.getTotalTax();
+        }
+        for (Product s: shoppingCart.keySet()){
+            if(s instanceof DigitalProduct){
+                total += s.getPrice()*shoppingCart.get(s); //Price after coupon * quantity
+            }
+
+            else if(s instanceof GiftableDigitalProduct){
+                total += s.getPrice()*shoppingCart.get(s);
+            }
+
+            else if(s instanceof PhysicalProduct){
+                total += s.getPrice()*shoppingCart.get(s) +((PhysicalProduct) s).getWeight() *shoppingCart.get(s) * BASE_FEE;
+            }
+
+            else if(s instanceof GiftablePhysicalProduct){
+                total += s.getPrice()*shoppingCart.get(s) +((GiftablePhysicalProduct) s).getWeight()*shoppingCart.get(s) * BASE_FEE;
+            }
+        }       
+        return total + this.getTotalTax();
+    }
+
+    public double getTotalTax(){
+        double total = 0;
+        for (Product p: shoppingCart.keySet()){
+            total += p.getPrice()*Tax.getTaxRate(p.getTaxType())*shoppingCart.get(p); //price*tax rate*quantity
+        }
+        return total;
+    }
+
     /**
     Calculates the total weight of all the physical products in the shopping cart.
     @return a double value of the total weight of all the physical products in the shopping cart.
@@ -422,10 +525,23 @@ public class ShoppingCart {
         this.couponApplied = coupon;
     }
 
-    public void addCoupon(String couponName){
+    public boolean addCoupon(String couponName){
         Coupon coupon = CouponList.getCouponObjectByName(couponName);
-        this.couponApplied = coupon;
+        if (CouponList.getCouponList().contains(coupon)){
+            this.couponApplied = coupon;
+            return true;
+        }
+        return false;
     }
+
+    public boolean removeCoupon(){
+        if (this.couponApplied == null){
+            return false;
+        }
+        this.couponApplied = null;
+        return true;
+    }
+
 
     public static void addCouponToCart(){
         Scanner scanner = new Scanner(System.in);
@@ -439,20 +555,61 @@ public class ShoppingCart {
         for (ShoppingCart s: ShoppingCartList.getShoppingCartList()){
             if (shoppingCartName.equalsIgnoreCase(s.getName())){
                 ShoppingCart sh = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
+                if (sh.isPaid()){
+                    System.out.println("Shopping Cart has been paid and can not be modified");
+                    return;
+                }
 
                 System.out.println("Enter Coupon ID to add to shopping cart");
                 couponId = scanner.nextLine();
-                sh.addCoupon(couponId);
-                cartFound = true;
-                System.out.println("Added coupon "+couponId+" to cart "+sh.getName());
+                
+                if (sh.addCoupon(couponId)){
+                    cartFound = true;
+                    System.out.println("Added coupon "+couponId+" to cart "+sh.getName());
+                }else{
+                    System.out.println("Coupon not exist");
+                    return;
+                }
             }
         }
 
         if (cartFound == false){
-            System.out.println("Cart not found.");
+            System.out.println("Cart not found");
         }
     }
     
+    public static void removeCouponFromCart(){
+        Scanner scanner = new Scanner(System.in);
+        String couponId;
+        String shoppingCartName;
+        boolean cartFound = false;
+
+        System.out.println("Enter Shopping cart name to remove coupon: ");
+        shoppingCartName = scanner.nextLine();
+
+        for (ShoppingCart s: ShoppingCartList.getShoppingCartList()){
+            if (shoppingCartName.equalsIgnoreCase(s.getName())){
+                ShoppingCart sh = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
+                if (sh.isPaid()){
+                    System.out.println("Shopping Cart has been paid and can not be modified");
+                    return;
+                }
+                couponId = sh.getCouponApplied().getId();
+                
+                if (sh.removeCoupon()){
+                    cartFound = true;
+                    System.out.println("Removed coupon "+couponId+" from cart "+sh.getName());
+                }else{
+                    System.out.println("There is no coupon for this cart");
+                    return;
+                }
+            }
+        }
+
+        if (cartFound == false){
+            System.out.println("Cart not found or Coupon not exist");
+        }
+    }
 
     // Getters and Setters
 
@@ -467,6 +624,15 @@ public class ShoppingCart {
     public void setShoppingCart(HashMap<Product, Integer> shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
+
+    public HashMap<Product,ArrayList<String>> getGiftMessageList() {
+        return this.giftMessageList;
+    }
+
+    public void setGiftMessageList(HashMap<Product,ArrayList<String>> giftMessageList) {
+        this.giftMessageList = giftMessageList;
+    }
+
 
     public String getName() {
         return this.name;
@@ -483,6 +649,25 @@ public class ShoppingCart {
 
     public void setCouponApplied(Coupon couponApplied) {
         this.couponApplied = couponApplied;
+    }
+
+    public boolean isPaid() {
+        return this.paid;
+    }
+
+    public boolean getPaid() {
+        return this.paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public String getStatus(){
+        if (this.isPaid()){
+            return "Paid";
+        }
+        return "Not Paid";
     }
 
     
