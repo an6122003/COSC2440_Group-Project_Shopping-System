@@ -32,7 +32,6 @@ public class ReceiptExporter {
                 cartFound = true;
             }
         }
-
         if(!cartFound){
             System.out.println("Shopping Cart not found.");
         }
@@ -40,8 +39,14 @@ public class ReceiptExporter {
     }
 
     public static void printReceipt(ShoppingCart s){
-        String fileName = s.getName() + "_Receipt.txt";
-        filePath = "./src/main/java/com/cosc2440/receipt/Cart" + fileName;
+        System.out.println("Enter name for the receipt file (Type default for default naming)");
+        String fileName = scanner.nextLine();
+        if (fileName.equalsIgnoreCase("default")){
+            fileName = "Cart"+s.getName()+ "_Receipt.txt";
+        }else{
+            fileName += ".txt";
+        }
+        filePath = "./src/main/java/com/cosc2440/receipt/" + fileName;
         file = new File(filePath);
         
         if (file.exists()){

@@ -2,20 +2,23 @@
 |                       RECEIPT                                  |
 |                                                              |
 | Customer Name: An Nguyen                                      |
-| Date: 04/30/2023                                               |
+| Date Of Purchase: 02/05/2023                                  |
 |                                                              |
 |                                                               |
-| Cart Number: 2                                               |
-| Product:            {}                          |
-| Gift Message:       {}                          |
+| Cart Number: 2                                                |
+| Product:            {DIGITAL - Movie=1, GIFTABLE DIGITAL - Album=1}                          |
+| Gift Message:       {GIFTABLE DIGITAL - Album=[Message3]}                          |
 | Total Weight:       0.0 kg                                    |
 | --------------------------------                              |
 | Coupon Applied:                                               |
-| null                                                            |
+| Coupon ID: Coupon2
+Coupon Type: Percentage Coupon
+Coupon Value: 25%                                                            |
 | --------------------------------                              |
-| Subtotal:           $0.0                                     |
-| Tax:                $0.0                                     |
-| Total:              $0.0                                     |
+| Shipping Fee:       $0.0                                     |
+| Subtotal:           $105.0                                     |
+| Tax:                $0.5                                     |
+| Total:              $105.5                                     |
 |                                                              |
 | Payment Method: Credit Card                                    |
 | Card Number: **** **** **** 1234                               |

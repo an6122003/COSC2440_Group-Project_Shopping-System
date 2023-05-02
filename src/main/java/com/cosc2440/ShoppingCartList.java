@@ -13,6 +13,7 @@ public class ShoppingCartList {
     private static int cartCount = 0;
     private static ArrayList<ShoppingCart> shoppingCartList = new ArrayList();
     private static HashMap<String,ShoppingCart> shoppingCartMap = new HashMap<>();
+    private static Scanner scanner = new Scanner(System.in);
 
     /**
     Creates a new shopping cart and adds it to the shoppingCartList.
@@ -22,6 +23,23 @@ public class ShoppingCartList {
         shoppingCartList.add(new ShoppingCart());
         cartCount++;
         System.out.println("Shopping Cart created successfully!");
+    }
+
+    public static void viewOneCart(){
+        if (ShoppingCartList.getShoppingCartList().size()==0){
+            System.out.println("There are no shopping cart yet.");
+            return;
+        }
+        System.out.println("Enter name of shopping cart to view");
+        String cartName = scanner.nextLine();
+        // ShoppingCart s = getShoppingCartObjectByName(cartName);
+        for (ShoppingCart s: ShoppingCartList.getShoppingCartList()){
+            if (s.getName().equalsIgnoreCase(cartName)){
+                System.out.println(s.toString());
+                return;
+            }
+        }
+        System.out.println("Cart not exist");
     }
 
     /**
@@ -50,12 +68,13 @@ public class ShoppingCartList {
         }else{
             System.out.println("Do you want to sort in Ascending or Descending order: ");
             input = scanner.nextLine();
-            if (input.equals("Ascending")){
+            if (input.equalsIgnoreCase("Ascending")){
                 isAscending = true;
-            }else if (input.equals("Descending")){
+            }else if (input.equalsIgnoreCase("Descending")){
                 isAscending = false;
             }else{
                 isAscending = false;
+                input = "Descending";
             }
             System.out.println("Shopping cart sorted by weight ("+input+" order):\n");
             for (ShoppingCart s: ShoppingCartList.sortShoppingCartByWeight(isAscending)){

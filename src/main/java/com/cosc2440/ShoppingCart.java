@@ -129,7 +129,8 @@ public class ShoppingCart {
         String giftMessage;
         boolean cartFound = false;
 
-        System.out.println("Enter Shopping cart name: ");
+        try{
+            System.out.println("Enter Shopping cart name: ");
         shoppingCartName = scanner.nextLine();
         ShoppingCart s = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
         if (s.isPaid()){
@@ -170,6 +171,9 @@ public class ShoppingCart {
         if (cartFound == false){
             System.out.println("Cart not found.");
         }
+        }catch(Exception e){
+            System.out.println("Wrong format for input data. Please try again");
+        }
     }
 
     public static void removeProductFromCart() throws Exception{
@@ -179,7 +183,8 @@ public class ShoppingCart {
         int quantity;
         boolean cartFound = false;
 
-        System.out.println("Enter Shopping cart name: ");
+        try{
+            System.out.println("Enter Shopping cart name: ");
         shoppingCartName = scanner.nextLine();
         ShoppingCart shoppingCart = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
         if (shoppingCart.isPaid()){
@@ -225,6 +230,54 @@ public class ShoppingCart {
 
         if (cartFound == false){
             System.out.println("Cart not found.");
+        }
+        }catch(Exception e){
+            System.out.println("Wrong format for input data. Please try again");
+        }
+    }
+
+    public static void editGiftMessageOfCart(){
+        try{
+            Scanner scanner = new Scanner(System.in);
+            String shoppingCartName;
+            String productName;
+            int quantity;
+            boolean cartFound = false;
+
+            System.out.println("Enter Shopping cart name: ");
+            shoppingCartName = scanner.nextLine();
+            // for (ShoppingCart s:ShoppingCartList.getShoppingCartList()){
+            //     if (s.getName().equalsIgnoreCase(shoppingCartName)){
+            //         break;
+            //     }
+            // }
+            ShoppingCart shoppingCart = ShoppingCartList.getShoppingCartObjectByName(shoppingCartName);
+            if (shoppingCart.isPaid()){
+                System.out.println("Shopping Cart has been paid and can not be modified");
+                return;
+            }
+            System.out.println("Enter product name you want to change message");
+            productName = scanner.nextLine();
+            Product product = ProductList.getProductObjectByName(productName);
+            if (product instanceof GiftableDigitalProduct|product instanceof GiftablePhysicalProduct){
+                System.out.println(shoppingCart.getGiftMessageList());
+                System.out.println("Enter the message you want to change (by number)");
+                int messRemove = scanner.nextInt();
+                scanner.nextLine();
+                while (messRemove>(shoppingCart.giftMessageList.get(product).size()) && !(shoppingCart.giftMessageList.get(product).size() == 0)){
+                    System.out.println("Number is out of range. Please enter the message you want to remove (by number)");
+                    messRemove = scanner.nextInt();
+                    scanner.nextLine();
+                }
+                System.out.println("Enter new message:");
+                String newMessage = scanner.nextLine();
+                String tempMessage = shoppingCart.getGiftMessageList().get(ProductList.getProductObjectByName(productName)).get(messRemove-1);
+                shoppingCart.getGiftMessageList().get(ProductList.getProductObjectByName(productName)).set(messRemove-1,newMessage);
+                System.out.println("Changed "+ tempMessage + " from cart: "+shoppingCart.getName()+" to "+newMessage);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Wrong format for input data. Please try again");
         }
     }
     
@@ -594,9 +647,10 @@ public class ShoppingCart {
                     System.out.println("Shopping Cart has been paid and can not be modified");
                     return;
                 }
-                couponId = sh.getCouponApplied().getId();
                 
-                if (sh.removeCoupon()){
+                if (sh.getCouponApplied()!=null){
+                    couponId = sh.getCouponApplied().getId();
+                    sh.removeCoupon();
                     cartFound = true;
                     System.out.println("Removed coupon "+couponId+" from cart "+sh.getName());
                 }else{

@@ -26,20 +26,29 @@ public abstract class Product{
     @throws Exception if the product name is not unique or the quantity is less than or equal to zero
     */
     public Product(String Name, String Description, int quantityAvailable, double price, String taxType) throws Exception {
-        if (Product.nameCheck(Name)){
-            this.Name = Name;
-            ProductList.getProductMap().put(Name, this);
-        }else{
-            throw new Exception("Product name must be unique");
+        try {
+            if (Product.nameCheck(Name)){
+                this.Name = Name;
+                ProductList.getProductMap().put(Name, this);
+            }else{
+                throw new Exception("Product name must be unique");
+            }
+            this.Description = Description;
+            if (quantityAvailable>0){
+                this.quantityAvailable = quantityAvailable;            
+            }else{
+                throw new Exception("Quantity must be positive number");
+            }
+            this.price = price;
+            if (taxType.equals("No")|taxType.equals("Normal")|taxType.equals("Luxury")){
+                this.taxType = taxType;
+            }else{
+                this.taxType = "No";
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("Wrong format for input data. Please try again");
         }
-        this.Description = Description;
-        if (quantityAvailable>0){
-            this.quantityAvailable = quantityAvailable;            
-        }else{
-            throw new Exception("Quantity must be positive");
-        }
-        this.price = price;
-        this.taxType = taxType;
     }
 
     /**
@@ -57,7 +66,8 @@ public abstract class Product{
     }
 
     public static void createProduct() throws Exception{
-        Scanner scanner = new Scanner(System.in);
+        try{
+            Scanner scanner = new Scanner(System.in);
         String name;
         String description;
         int quantity;
@@ -147,7 +157,10 @@ public abstract class Product{
             System.out.println("Product created successfully!\n--------------------------------");
             break;
         }
-    }
+        }catch(Exception e){
+            System.out.println("Wrong format for input data. Please try again");
+        }
+    }   
 
     public static void editProduct() throws Exception{
         String name;
@@ -159,7 +172,8 @@ public abstract class Product{
         String giftMessage;
         String taxType;
 
-        Scanner scanner = new Scanner(System.in);
+        try{
+            Scanner scanner = new Scanner(System.in);
 
         System.out.println("Which kind of product do you want to edit ?");
         System.out.println("1. Digital Product");
@@ -190,10 +204,9 @@ public abstract class Product{
                     p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
-                }else{
-                    System.out.println("Product not found.\n--------------------------------");
                 }
             }
+            System.out.println("Product not found.\n--------------------------------");
             break;
 
             case "2":
@@ -210,6 +223,7 @@ public abstract class Product{
             scanner.nextLine();
             System.out.println("Enter New Product Weight:");
             weight = scanner.nextDouble();
+            scanner.nextLine();
             System.out.println("Enter New Product Tax Type (No/Normal/Luxury):");
             taxType = scanner.nextLine();
             
@@ -222,10 +236,9 @@ public abstract class Product{
                     p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
-                }else{
-                    System.out.println("Product not found.\n--------------------------------");
                 }
             }
+            System.out.println("Product not found.\n--------------------------------");
             break;
 
             case "3":
@@ -251,10 +264,9 @@ public abstract class Product{
                     p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
-                }else{
-                    System.out.println("Product not found.\n--------------------------------");
                 }
             }
+            System.out.println("Product not found.\n--------------------------------");
             break;
 
             case "4":
@@ -284,11 +296,13 @@ public abstract class Product{
                     p.setTaxType(taxType);
                     System.out.println("Product editted successfully!\n--------------------------------");
                     break;
-                }else{
-                    System.out.println("Product not found.\n--------------------------------");
                 }
             }
+            System.out.println("Product not found.\n--------------------------------");
             break;
+        }
+        }catch(Exception e){
+            System.out.println("Wrong format for input data. Please try again");
         }
     }
 
@@ -297,18 +311,23 @@ public abstract class Product{
     */
     public static void displayProductList(){
         int count = 0;
+        System.out.printf("No  %-19s%-27s%-15s%-15s%-10s%-15s%-50s%-30s\n", "Type", "Name", "Price", "Quantity", "Giftable", "Weight", "Description", "Tax Type");
         for (Product p: ProductList.getProductList()){
             count++;
-            System.out.print(count+". ");
+            System.out.printf("%02d. ",count);
             if (p instanceof GiftableDigitalProduct){
-                System.out.printf("Type: Giftable Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((GiftableDigitalProduct) p).getTaxType());
+                System.out.printf(" %-19s%-27s%-15.2f%-15d%-10s%-12s%-50s%-30s\n", "Giftable Digital", p.getName(), p.getPrice(), p.getQuantityAvailable(), "Yes", 0, p.getDescription(), p.getTaxType());
+                // System.out.printf("Type: Giftable Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((GiftableDigitalProduct) p).getTaxType());
             }else if (p instanceof GiftablePhysicalProduct){
-                System.out.printf("Type: Gifttable Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),((GiftablePhysicalProduct) p).getTaxType());
+                System.out.printf(" %-19s%-27s%-15.2f%-15d%-10s%-12s%-50s%-30s\n", "Giftable Physical", p.getName(), p.getPrice(), p.getQuantityAvailable(), "Yes", ((PhysicalProduct) p).getWeight(), p.getDescription(), p.getTaxType());
+                // System.out.printf("Type: Gifttable Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),((GiftablePhysicalProduct) p).getTaxType());
             }
             else if (p instanceof DigitalProduct){
-                System.out.printf("Type: Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),p.getTaxType());
+                System.out.printf(" %-19s%-27s%-15.2f%-15d%-10s%-12s%-50s%-30s\n", "Digital", p.getName(), p.getPrice(), p.getQuantityAvailable(), "No", 0, p.getDescription(), p.getTaxType());
+                // System.out.printf("Type: Digital, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),p.getTaxType());
             }else if (p instanceof PhysicalProduct){
-                System.out.printf("Type: Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),p.getTaxType());
+                System.out.printf(" %-19s%-27s%-15.2f%-15d%-10s%-12s%-50s%-30s\n", "Physical", p.getName(), p.getPrice(), p.getQuantityAvailable(), "No", ((PhysicalProduct) p).getWeight(), p.getDescription(), p.getTaxType());
+                // System.out.printf("Type: Physical, Name: %s, Description: %s, Quantity: %d, Price: %.1f, Weight: %.1f, Tax Type: %s\n",p.getName(),p.getDescription(),p.getQuantityAvailable(),p.getPrice(),((PhysicalProduct) p).getWeight(),p.getTaxType());
             }
         }
     }

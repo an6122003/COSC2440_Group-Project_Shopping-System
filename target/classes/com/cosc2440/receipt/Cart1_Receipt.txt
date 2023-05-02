@@ -6,19 +6,19 @@
 |                                                              |
 |                                                               |
 | Cart Number: 1                                                |
-| Product:            {}                          |
-| Gift Message:       {}                          |
+| Product:            {DIGITAL - Movie=2, GIFTABLE DIGITAL - Album=2}                          |
+| Gift Message:       {GIFTABLE DIGITAL - Album=[Message1, Message2]}                          |
 | Total Weight:       0.0 kg                                    |
 | --------------------------------                              |
 | Coupon Applied:                                               |
-| Coupon ID: Coupon10
-Coupon Type: Percentage Coupon
-Coupon Value: 15%                                                            |
+| Coupon ID: Coupon1
+Coupon Type: Price Coupon
+Coupon Value: $75                                                            |
 | --------------------------------                              |
 | Shipping Fee:       $0.0                                     |
-| Subtotal:           $0.0                                     |
-| Tax:                $0.0                                     |
-| Total:              $0.0                                     |
+| Subtotal:           $135.0                                     |
+| Tax:                $1.0                                     |
+| Total:              $136.0                                     |
 |                                                              |
 | Payment Method: Credit Card                                    |
 | Card Number: **** **** **** 1234                               |

@@ -19,7 +19,7 @@ public class DataInitialization {
     public static String shoppingCartFileName = "./src/main/java/com/cosc2440/file/cart.txt";
 
 
-    public static void LoadProduct(){
+    public static void loadProduct(){
         try (FileReader reader = new FileReader(productFileName)) {
 
             List<Product> products = Files.lines(Paths.get(productFileName))
@@ -68,7 +68,7 @@ public class DataInitialization {
         }
     }
 
-    public static void LoadCoupon(){
+    public static void loadCoupon(){
         try (FileReader reader = new FileReader(productFileName)) {
             List<Coupon> coupons = Files.lines(Paths.get(productFileName))
                 .filter(line -> line.startsWith("Coupon"))

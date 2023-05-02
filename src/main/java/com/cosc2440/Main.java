@@ -34,7 +34,7 @@ public class Main {
 //        ProductList.getProductList().add(new GiftableDigitalProduct("Album", "A collection of popular songs in MP3 format", 20, 100, "No"));
 //        ProductList.getProductList().add(new GiftablePhysicalProduct("Journal","A hardcover journal with a pen holder", 15, 200, 1, "Normal"));
 //        ProductList.getProductList().add(new GiftableDigitalProduct("Online Course", "A comprehensive course on web development", 100, 500, "Luxury"));
-        DataInitialization.LoadProduct();
+        DataInitialization.loadProduct();
 
         //Sample cart and coupon creation
         // ShoppingCartList.createShoppingCart();
@@ -45,7 +45,7 @@ public class Main {
         // CouponList.getCouponList().add(new PriceCoupon(100));
         // CouponList.getCouponList().add(new PercentageCoupon(20));
         // CouponList.getCouponList().add(new PercentageCoupon(50));
-        DataInitialization.LoadCoupon();
+        DataInitialization.loadCoupon();
         DataInitialization.loadShoppingCart();
 
 
@@ -73,16 +73,18 @@ public class Main {
             System.out.println("3. Create new shoping cart");
             System.out.println("4. Add product to shoping cart");
             System.out.println("5. Remove product from shoping cart");
-            System.out.println("6. View all shoping cart");
-            System.out.println("7. View all shoping cart sorted by weight");
-            System.out.println("8. Apply coupon to shopping cart");
-            System.out.println("9. Remove coupon from shopping cart");
-            System.out.println("10. View all coupons");
-            System.out.println("11. Print Receipt");
-            System.out.println("12. Quit");
+            System.out.println("6. Edit gift message of a shoping cart");
+            System.out.println("7. View selected shoping cart");
+            System.out.println("8. View all shoping cart");
+            System.out.println("9. View all shoping cart sorted by weight");
+            System.out.println("10. Apply coupon to shopping cart");
+            System.out.println("11. Remove coupon from shopping cart");
+            System.out.println("12. View all coupons");
+            System.out.println("13. Print Receipt");
+            System.out.println("14. Quit");
             System.out.println("--------------------------------");
             System.out.println("(Enter the according number to proceed)");
-            
+
             switch (scanner.nextLine()){
                 case "0":
                 System.out.println("--------------------------------");
@@ -92,13 +94,11 @@ public class Main {
                 case "1":
                     System.out.println("--------------------------------");
                     Product.createProduct();
-                    Product.displayProductList();
                     System.out.println("--------------------------------");
                     break;
                 case "2":
                     System.out.println("--------------------------------");
                     Product.editProduct();
-                    Product.displayProductList();
                     System.out.println("--------------------------------");
                     break;
                 case "3":
@@ -108,42 +108,50 @@ public class Main {
                     break;
                 case "4":
                     System.out.println("--------------------------------");
-                    ShoppingCartList.viewAllShoppingCart();
                     ShoppingCart.addProductToCart();
                     System.out.println("--------------------------------");
                     break;
                 case "5":
                     System.out.println("--------------------------------");
-                    ShoppingCartList.viewAllShoppingCart();
                     ShoppingCart.removeProductFromCart();
                     System.out.println("--------------------------------");
                     break;
                 case "6":
                     System.out.println("--------------------------------");
-                    ShoppingCartList.viewAllShoppingCart();
+                    ShoppingCart.editGiftMessageOfCart();
                     System.out.println("--------------------------------");
                     break;
                 case "7":
                     System.out.println("--------------------------------");
-                    ShoppingCartList.viewAllShoppingCartSortedByWeight();
+                    ShoppingCartList.viewOneCart();
                     System.out.println("--------------------------------");
                     break;
                 case "8":
                     System.out.println("--------------------------------");
-                    ShoppingCart.addCouponToCart();
+                    ShoppingCartList.viewAllShoppingCart();
+                    System.out.println("--------------------------------");
                     break;
                 case "9":
                     System.out.println("--------------------------------");
-                    ShoppingCart.removeCouponFromCart();
+                    ShoppingCartList.viewAllShoppingCartSortedByWeight();
+                    System.out.println("--------------------------------");
                     break;
                 case "10":
                     System.out.println("--------------------------------");
-                    CouponList.viewAllCoupon();
+                    ShoppingCart.addCouponToCart();
                     break;
                 case "11":
-                    ReceiptExporter.printReceiptForCart();
+                    System.out.println("--------------------------------");
+                    ShoppingCart.removeCouponFromCart();
                     break;
                 case "12":
+                    System.out.println("--------------------------------");
+                    CouponList.viewAllCoupon();
+                    break;
+                case "13":
+                    ReceiptExporter.printReceiptForCart();
+                    break;
+                case "14":
                     System.out.println("--------------------------------");
                     System.out.println("Goodbye, See you again.");
                     quit = true;
