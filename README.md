@@ -4,6 +4,7 @@ Lecturer: Dr. Dang Tran Tri
 
 --------------------------
 Some of the javadoc was written with the help of ChatGPT
+This is the continued project from the project: COSC2440---Individual-Project---Shopping-System (https://github.com/an6122003/COSC2440---Individual-Project---Shopping-System/tree/master/src) 
 --------------------------
 
 Assessment Details
